@@ -1,7 +1,9 @@
 //variables
 const btnEnviar = document.querySelector("#enviar");
+const btnReset = document.querySelector("#resetBtn");
 const formulario = document.querySelector("#enviar-mail");
-const er = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const er =
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 //Variables para campos
 const email = document.querySelector("#email");
@@ -18,8 +20,11 @@ function eventListeners() {
   asunto.addEventListener("blur", validarFormulario);
   mensaje.addEventListener("blur", validarFormulario);
 
+  //Reinicia el formulario
+  btnReset.addEventListener("click", resetearFormulario);
+
   //Enviar email
-  formulario.addEventListener("submit", enviarEmail)
+  formulario.addEventListener("submit", enviarEmail);
 }
 
 //funciones
@@ -33,8 +38,8 @@ function validarFormulario(e) {
   if (e.target.value.length > 0) {
     //Eliminar errores
     const error = document.querySelector(".error");
-    if (error){
-        error.remove();
+    if (error) {
+      error.remove();
     }
 
     e.target.classList.remove("border-green-500");
@@ -46,12 +51,12 @@ function validarFormulario(e) {
   }
 
   if (e.target.type === "email") {
-        if (er.test(email.value)) {
+    if (er.test(email.value)) {
       //Eliminar errores
       const error = document.querySelector(".error");
-        if (error){
-            error.remove();
-        }
+      if (error) {
+        error.remove();
+      }
       e.target.classList.remove("border-green-500");
       e.target.classList.add("border-green-500");
     } else {
@@ -60,7 +65,7 @@ function validarFormulario(e) {
       mostrarError("Email no valido");
     }
   }
-  if( email.value !== '' && asunto.value !== '' && mensaje.value !== ''){
+  if (email.value !== "" && asunto.value !== "" && mensaje.value !== "") {
     btnEnviar.disabled = false;
     btnEnviar.classList.remove("cursor-not-allowed", "opacity-50");
   }
@@ -86,23 +91,40 @@ function mostrarError(mensaje) {
 
 //Envia el email
 function enviarEmail(e) {
-    e.preventDefault();
-    //Mostrar el spinner
-    const spinner = document.querySelector("#spinner");
-    spinner.style.display = "flex";
+  e.preventDefault();
+  //Mostrar el spinner
+  const spinner = document.querySelector("#spinner");
+  spinner.style.display = "flex";
 
-    //Despues de 3 segundos ocultar el spinner
-    setTimeout(() =>{
-        spinner.style.display = "none";
-        const parrafo = document.createElement("p");
-        parrafo.textContent = "El mensaje se envio correctamente";
-        parrafo.classList.add('text-center', 'my-10', 'p-3', 'bg-green-500', 'text-white');
+  //Despues de 3 segundos ocultar el spinner
+  setTimeout(() => {
+    spinner.style.display = "none";
+    const parrafo = document.createElement("p");
+    parrafo.textContent = "El mensaje se envio correctamente";
+    parrafo.classList.add(
+      "text-center",
+      "my-10",
+      "p-3",
+      "bg-green-500",
+      "text-white"
+    );
 
-        //Inserta el parrafo antes del sppiner
-        formulario.insertBefore(parrafo, spinner)
+    //Inserta el parrafo antes del sppiner
+    formulario.insertBefore(parrafo, spinner);
 
-        setTimeout(() =>{
-            parrafo.remove(); //Eliminar el parrafo
-        },5000)
-    }, 3000)
+    setTimeout(() => {
+      parrafo.remove(); //Eliminar el parrafo
+
+      resetearFormulario(); //Resetea el formulario
+    }, 5000);
+  }, 3000);
+}
+
+//Función que reinicie el Formulario
+function resetearFormulario(e) {
+  e.preventDefault();
+  
+  formulario.reset();
+
+  iniciarApp();
 }
