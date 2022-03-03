@@ -93,3 +93,30 @@ form {
       transform: scale(1.0); 
     } 
   }
+
+  .form{
+    max-width: 470px;
+    background-image: linear-gradient(to right top, #c74a92, #be55a8, #af61bc, #9b6dce, #8279dc, #6889ea, #4698f4, #00a6f9, #00bafd, #00cdf8, #00ddee, #3dece1);
+    border-radius: 0.6rem;
+    -webkit-border-radius: 0.6rem;
+    -moz-border-radius: 0.6rem;
+    -ms-border-radius: 0.6rem;
+    -o-border-radius: 0.6rem;
+}
+  label{
+    color: white;
+  }
+  input, textarea{
+    border-radius: 0.6rem;
+    -webkit-border-radius: 0.6rem;
+    -moz-border-radius: 0.6rem;
+    -ms-border-radius: 0.6rem;
+    -o-border-radius: 0.6rem;
+}
+  button{
+    border-radius: 0.6rem;
+    -webkit-border-radius: 0.6rem;
+    -moz-border-radius: 0.6rem;
+    -ms-border-radius: 0.6rem;
+    -o-border-radius: 0.6rem;
+}
