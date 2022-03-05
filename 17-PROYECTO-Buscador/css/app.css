@@ -1,5 +1,7 @@
 body {
-    background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+    min-height: 100vh;
+    background-image: linear-gradient(to right top, #e31e8e, #d723a4, #c531ba, #aa40cf, #854ee2, #656af2, #3e80fb, #0093ff, #00b0ff, #00c4e5, #00d19d, #21d640);
+    background-repeat: no-repeat;
     font-family: 'Staatliches', cursive;
 }
 html {
@@ -15,6 +17,11 @@ h1 {
     background-color: white;
     max-width: 1200px;
     margin: 0 auto;
+    border-radius: 1rem;
+    -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    -ms-border-radius: 1rem;
+    -o-border-radius: 1rem;
 }
 p {
     font-size: 2rem;
@@ -56,16 +63,4 @@ form {
 }
 .error {
     background-color: red;
-}
-
-.sitio-web  {
-    color: white;
-    display: block;
-    font-size: 4rem;
-    max-width: 1200px;
-    margin: 2rem auto;
-    text-decoration: none;
-}
-.sitio-web:hover {
-    color: white;
 }
