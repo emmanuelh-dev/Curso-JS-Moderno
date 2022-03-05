@@ -27,6 +27,10 @@ h1 {
     -ms-border-radius: 1rem;
     -o-border-radius: 1rem;
 }
+.contenedor-resultados{
+    width: 90%;
+    margin: 0 auto;
+}
 p {
     font-size: 2rem;
 }
