@@ -12,7 +12,13 @@ function cargarEventListeners() {
   listaCursos.addEventListener("click", agregarCurso);
 
   //Elimina un curso del carrito
-  carrito.addEventListener("click", eliminarCurso)
+  carrito.addEventListener("click", eliminarCurso);
+
+  // Vaciar el carrito
+  vaciarCarrito.addEventListener("click", () => {
+    articulos = []; //Reseteamos el carrito
+    limpiarHTML();
+  });
 }
 
 //Funciones
@@ -21,30 +27,23 @@ function agregarCurso(e) {
 
   if (e.target.classList.contains("agregar-carrito")) {
     const cursoSeleccionado = e.target.parentElement.parentElement;
-    console.log();
-
     leerDatosCurso(cursoSeleccionado);
   }
 }
 //Elimina un elemento del curso
-function eliminarCurso(e){
-
-  if(e.target.classList.contains('borrar-curso')){
-    const cursoId = e.target.getAttribute('data-id')
+function eliminarCurso(e) {
+  if (e.target.classList.contains("borrar-curso")) {
+    const cursoId = e.target.getAttribute("data-id");
 
     //Elimina del arreglo articulos por el data-id
-    articulos = articulos.filter(curso => curso.id !== cursoId)
+    articulos = articulos.filter((curso) => curso.id !== cursoId);
 
-    carritoHTML()
+    carritoHTML();
   }
 }
 
-
-
 //Lee el contenido y extrae la info
 function leerDatosCurso(curso) {
-  console.log(curso);
-
   //Creando un objeto con el contenido del curso actual
   const infoCurso = {
     imagen: curso.querySelector("img").src,
@@ -58,7 +57,7 @@ function leerDatosCurso(curso) {
   const existe = articulos.some((curso) => curso.id === infoCurso.id);
   if (existe) {
     //Actualizamos la cantidad
-    const cursos = articulos.map(curso => {
+    const cursos = articulos.map((curso) => {
       if (curso.id === infoCurso.id) {
         curso.cantidad++; //Retorna el objeto actualizado
         return curso;
@@ -73,9 +72,6 @@ function leerDatosCurso(curso) {
   }
 
   //Agrega los elementos al carrito
-
-  console.log(articulos);
-
   carritoHTML();
 }
 
