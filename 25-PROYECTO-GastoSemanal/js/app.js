@@ -56,6 +56,15 @@ class UI{
             divMensaje.remove()
         },2000)
     }
+
+    agregarGastoListado(gastos){
+
+
+        //Iterar sobre los gastos
+        gastos.forEach(gasto => {
+            console.log(gasto)
+        });
+    }
 }
 
 //Instanciar
@@ -98,7 +107,14 @@ function agregarGasto(e){
 
     //Añade un nuevo gasto
     presupuesto.nuevoGasto(gasto)
+
     ui.imprimirAlerta("Gasto agregado correctamente", "success")
+
+    //imprimir los gastos
+    const {gastos} = presupuesto
+    ui.agregarGastoListado(presupuesto)
+
+
     //reinicia el formulario
     formulario.reset()
 
