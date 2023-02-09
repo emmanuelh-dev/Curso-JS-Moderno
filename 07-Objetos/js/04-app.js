@@ -6,7 +6,6 @@ const producto = {
 
 
 
-const { nombre } = producto;
-const { precio } = producto;
+const { nombre, precio, disponible } = producto;
 console.log(producto.nombre);
 console.log(precio);
