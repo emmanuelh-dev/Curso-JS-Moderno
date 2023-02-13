@@ -115,7 +115,7 @@ function enviarEmail(e) {
     setTimeout(() => {
       parrafo.remove(); //Eliminar el parrafo
 
-      resetearFormulario(); //Resetea el formulario
+      resetearFormulario(e); //Resetea el formulario
     }, 5000);
   }, 3000);
 }
@@ -123,8 +123,6 @@ function enviarEmail(e) {
 //Función que reinicie el Formulario
 function resetearFormulario(e) {
   e.preventDefault();
-
   formulario.reset();
-
   iniciarApp();
 }
