@@ -1,114 +1,67 @@
 //Variables
-const formulario = document.querySelector("#formulario");
-const listaTweets = document.querySelector("#lista-tweets");
+const formulario = document.querySelector('#formulario');
+const listaTweets = document.querySelector('#lista-tweets');
+
 let tweets = [];
 
-// EventListener
+//Event listeners
 eventListeners();
 
-function eventListeners() {
-  //Cuando el usuario agrega un nuevo tweet
-  formulario.addEventListener("submit", agregarTweet);
-
-  document.addEventListener("DOMContentLoaded", () => {
-    tweet = JSON.parse(localStorage.getItem("tweets")) || [];
-
-    console.log(tweets);
-
-    crearHTML();
-  });
+function eventListeners(){
+  formulario.addEventListener('submit', agregarTweet);
 }
 
+
 //Funciones
-function agregarTweet(e) {
+
+//Funcion agregar tweet
+function agregarTweet(e){
   e.preventDefault();
 
   //Text area donde el usuario escribe
-  const tweet = document.querySelector("#tweet").value;
-
+  const tweet = document.querySelector('#tweet').value;
   //Validacion
-  if (tweet === "") {
+  if(tweet === ""){
     mostrarError("No puede ir vacio");
-
-    return; //Evita que se sigan ejecuntando más lineas de código
+    return;
   }
-
   const tweetObj = {
     id: Date.now(),
-    tweet,
-  };
+    tweet
+  }
+  //Agregar tweet
+  tweets = [...tweet, tweetObj];
+  console.log(tweets);
 
-  //Añadir al arreglo de tweets
-  tweets = [...tweets, tweetObj];
-
-  //Creamos el HTML
-  crearHTML();
-
-  //Reiniciamos el formulario
-  formulario.reset();
+  //Crando el html
 }
 
-//Mostrar mensaje de error
-function mostrarError(error) {
+//Funcion para mostrar el mensaje de error
+function mostrarError(mensaje){
   const mensajeError = document.createElement("p");
-  mensajeError.textContent = error;
+  mensajeError.textContent = mensaje;
   mensajeError.classList.add("error");
 
-  //Insertarlo en el contenido
-  const contenido = document.querySelector("#contenido");
-  contenido.appendChild(mensajeError);
+  //Lo insertamos en el contenido
+  const contendio = document.querySelector("#contenido")
+  contendio.appendChild(mensajeError);
 
-  //Elimina la alerta después de 3 segundos
+  //Lo ocultamos
   setTimeout(() => {
     mensajeError.remove();
   }, 3000);
 }
 
-//Muestra un listado de los tweets
-function crearHTML() {
-  limpiarHTML();
-  if (tweets.length > 0) {
-    tweets.forEach((tweet) => {
-      //Agregar un boton de eliminar
-      const btnEliminar = document.createElement("a");
-      btnEliminar.classList.add("borrar-tweet");
-      btnEliminar.innerText = "X";
 
-      //Añadir la funcion de eliminar
-      btnEliminar.onclick = () => {
-        borrarTweet(tweet.id);
-      };
+//Muesta los tweets
+function crearHTML(){
+  if(tweets.length > 0){
+    tweets.forEach(tweet => {
       //Creamos el HTML
-      const li = document.createElement("li");
-
-      //Creamos el texto
-      li.innerText = tweet.tweet;
-
-      //Asignamos el boton
-      li.appendChild(btnEliminar);
-
-      //Lo insertamos en el crearHTML
-      listaTweets.appendChild(li);
-    });
-  }
-
-  sincronizarStorage();
-}
-//Agrega los tweets actuales a local storage
-function sincronizarStorage() {
-  localStorage.setItem("tweets", JSON.stringify(tweets));
-}
-
-//Borrar tweet
-function borrarTweet(id) {
-  tweets = tweets.filter((tweet) => tweet.id !== id);
-
-  console.log(tweets);
-}
-
-//Limpiamos el HTML
-function limpiarHTML() {
-  while (listaTweets.firstChild) {
-    listaTweets.removeChild(listaTweets.firstChild);
+      const li = document.createElement('li');
+      //Añadimos el texto
+      li.innerText = tweet.text;
+      //Insertamos en el contenido
+    })
   }
 }

@@ -164,11 +164,17 @@ ul {
 }
 .info-card {
   padding: 10px 20px;
+  
 }
-
+.card-shadow{
+  box-shadow: 11px 10px 29px -5px rgba(0,0,0,0.36);
+  -webkit-box-shadow: 11px 10px 29px -5px rgba(0,0,0,0.36);
+  -moz-box-shadow: 11px 10px 29px -5px rgba(0,0,0,0.36);
+}
 .info-card p,
 .card h4 {
   margin-bottom: 5px;
+
 }
 .info-card .precio {
   text-decoration: line-through;
@@ -190,3 +196,11 @@ ul {
   text-decoration: none;
 }
 
+.header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  width: 100%;
+}

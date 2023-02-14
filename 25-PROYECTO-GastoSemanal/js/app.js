@@ -14,21 +14,75 @@ class Presupuesto {
   constructor(presupuesto) {
     this.presupuesto = Number(presupuesto);
     this.restante = this.presupuesto;
-    this.gastos = [];
+    // Comprobar si hay datos en localStorage
+    const gastosGuardados = localStorage.getItem("gastos");
+    if (gastosGuardados) {
+      this.gastos = JSON.parse(gastosGuardados);
+    } else {
+      this.gastos = [];
+    }
   }
+
+  nuevoGasto(gasto) {
+    this.gastos = [...this.gastos, gasto];
+    this.calculaRestante();
+    this.actualizarLocalStorage();
+  }
+
+  calculaRestante() {
+    const gastado = this.gastos.reduce(
+      (total, gasto) => total + gasto.cantidad,
+      0
+    );
+    this.restante = this.presupuesto - gastado;
+  }
+
+  eliminarGasto(id) {
+    this.gastos = this.gastos.filter((gasto) => gasto.id !== id);
+    this.calculaRestante();
+    this.actualizarLocalStorage();
+  }
+
+  actualizarLocalStorage() {
+    localStorage.setItem("gastos", JSON.stringify(this.gastos));
+  }
+
+  guardarPresupuesto() {
+    localStorage.setItem('presupuesto', JSON.stringify(this));
+  }
+
+  // Método para cargar el presupuesto desde localStorage
+  cargarPresupuesto() {
+    if (localStorage.getItem('presupuesto')) {
+      const presupuestoGuardado = JSON.parse(localStorage.getItem('presupuesto'));
+      this.presupuesto = presupuestoGuardado.presupuesto;
+      this.restante = presupuestoGuardado.restante;
+      this.gastos = presupuestoGuardado.gastos;
+    }
+  }
+
   nuevoGasto(gasto) {
     this.gastos = [...this.gastos, gasto];
     console.log(this.gastos);
+    this.calculaRestante();
+    this.guardarPresupuesto(); // Guardar en localStorage
+  }
+
+  eliminarGasto(id) {
+    this.gastos = this.gastos.filter(gasto => gasto.id !== id);
+    this.calculaRestante();
+    this.guardarPresupuesto(); // Guardar en localStorage
   }
 }
+
 
 class UI {
   insertarPresupuesto(cantidad) {
     //Extraemos el valor
     const { presupuesto, restante } = cantidad;
     //Insertamos el presupuesto en el HTML
-    document.querySelector("#total").textContent = presupuesto;
-    document.querySelector("#restante").textContent = restante;
+    document.querySelector("#total").textContent = presupuesto.toLocaleString();
+    document.querySelector("#restante").textContent = restante.toLocaleString();
   }
 
   imprimirAlerta(mensaje, type) {
@@ -53,7 +107,8 @@ class UI {
   }
 
 
-  agregarGastoListado(gastos){
+  mostrarGastos(gastos){
+    this.limpiarHTML();//Elimina el HTML previo
 
     //Iteramos sobre los gastos
     gastos.forEach((gasto) => {
@@ -61,44 +116,97 @@ class UI {
 
       //Crear un LI
         const nuevoGasto = document.createElement("li");
-        nuevoGasto.className = "list-group-item d-flex justify-content-between align-items-center";
+        nuevoGasto.className = "list-group-item mb-2 d-flex justify-content-between align-items-center";
         nuevoGasto.dataset.id = id;
 
         //Agregar el HTML del gasto
-        nuevoGasto.innerHTML = `${nombre} <span class="badge badge-primary badge-pill"> ${cantidad}</span>`
+        nuevoGasto.innerHTML = `${nombre} <span class="badge badge-primary badge-pill"> $${cantidad.toLocaleString()}</span>`
 
       //Boton para eliminar el gasto
       const btnBorrar = document.createElement("button");
       btnBorrar.classList.add("btn", "btn-danger", "borrar-gasto");
-      btnBorrar.innerHTML = "X";
+      btnBorrar.innerHTML = "Borrar";
+      btnBorrar.onclick = () => {
+        presupuesto.eliminarGasto(id);
+        this.mostrarGastos(presupuesto.gastos);
+        this.actualizarRestante(presupuesto.restante);
+      };
+      nuevoGasto.appendChild(btnBorrar);
         //Gastos
       gastoListado.appendChild(nuevoGasto);
     });
   }
+
+  //Limpiar el HTML
+  limpiarHTML(){
+    while(gastoListado.firstChild){
+      gastoListado.removeChild(gastoListado.firstChild)
+    }
+  }
+  actualizarRestante(restante){
+    const restanteDiv = document.querySelector("#restante");
+    restanteDiv.textContent = restante.toLocaleString();
+  };
+
+
+  comprobarPresupuesto(presupuestoObj){
+    const {presupuesto, restante} = presupuestoObj;
+    const restanteDiv = document.querySelector(".restante");;
+    //Comprobar 25%
+    if (presupuesto > 0) {
+        restanteDiv.classList.remove("alert-danger","alert-warning")
+        restanteDiv.classList.add("alert-success")
+        formulario.querySelector('button[type="submit"]').disabled = false;
+    }
+   if((presupuesto / 4) > restante){
+      restanteDiv.classList.remove("alert-success","alert-warning")
+      restanteDiv.classList.add("alert-danger")
+      formulario.querySelector('button[type="submit"]').disabled = false;
+    } else if((presupuesto / 2) > restante){
+      restanteDiv.classList.remove("alert-success")
+      restanteDiv.classList.add("alert-warning", "alert-danger")
+      formulario.querySelector('button[type="submit"]').disabled = false;
+    }
+
+    if(restante < 0){
+      ui.imprimirAlerta("El presupuesto se ha agotado", "error");
+      formulario.querySelector('button[type="submit"]').disabled = true;
+    }
+  }
+
 }
 
 //Instancias
 const ui = new UI();
-let presupuesto;
+let presupuesto = localStorage.getItem("presupuesto");
 //Funciones
+if (presupuesto !== null) {
+  presupuesto = new Presupuesto(Number(presupuesto));
+}
 
 function preguntarPresupuesto() {
-  let presupuestoUsuario = prompt("Ingrese el presupuesto de la semana");
-  presupuestoUsuario = Number(presupuestoUsuario);
-  while (
-    !presupuestoUsuario ||
-    isNaN(presupuestoUsuario) ||
-    presupuestoUsuario <= 0
-  ) {
-    alert("Entrada inválida. Por favor, ingrese un número válido.");
-    presupuestoUsuario = prompt("Ingrese el presupuesto de la semana");
+  if (presupuesto === null) {
+    let presupuestoUsuario = prompt("Ingrese el presupuesto de la semana");
     presupuestoUsuario = Number(presupuestoUsuario);
+    while (
+      !presupuestoUsuario ||
+      isNaN(presupuestoUsuario) ||
+      presupuestoUsuario <= 0
+    ) {
+      alert("Entrada inválida. Por favor, ingrese un número válido.");
+      presupuestoUsuario = prompt("Ingrese el presupuesto de la semana");
+      presupuestoUsuario = Number(presupuestoUsuario);
+    }
+    presupuesto = new Presupuesto(presupuestoUsuario);
   }
-  //Instanciamos el presupuesto
-  presupuesto = new Presupuesto(presupuestoUsuario);
 
+  // Cargar presupuesto guardado en localStorage
+  presupuesto.cargarPresupuesto();
+
+  // Actualizar UI
   ui.insertarPresupuesto(presupuesto);
 }
+
 
 function agregarGasto(e) {
   e.preventDefault();
@@ -126,8 +234,19 @@ function agregarGasto(e) {
   ui.imprimirAlerta("Gasto agregado con éxito", "success");
 
   //Imprimimos los gastos
-  const {gastos} = presupuesto;
-  ui.agregarGastoListado([gasto]);
+  const {gastos, restante} = presupuesto;
+  ui.mostrarGastos(gastos);
+
+  ui.actualizarRestante(restante);
+
+  ui.comprobarPresupuesto(presupuesto);
   //Reiniciamos el formulario
   formulario.reset();
+}
+
+function eliminarGasto(id){
+  presupuesto.eliminarGasto(id);
+  ui.mostrarGastos(gastos);
+  ui.actualizarRestante(restante);
+  ui.comprobarPresupuesto(presupuesto);
 }
