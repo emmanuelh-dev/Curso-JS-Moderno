@@ -54,14 +54,26 @@ const List = [
   "53-Webpack-ESLint",
 ];
 document.addEventListener("DOMContentLoaded", function () {
-  const appDiv = document.getElementById("app");
 
-  if (Array.isArray(List)) {
-    const listLinks = List.map(
-      (element) => `<li><a class="text-blue-500" href="/${element}">${element}</a></li>`
-    ).join("");
+  const appDiv = document.getElementById("app");
+  const search = document.getElementById('search-box');
+  const list = List;
+
+  function renderList({items}){
+    appDiv.innerHTML = '';
+    const listLinks = items.map(item => `<li><a class="text-blue-500" href="/${item}">${item}</a></li>`).join('');
     appDiv.innerHTML = `<ul class='columns-3'>${listLinks}</ul>`;
-  } else {
-    appDiv.innerHTML = "Error al cargar la lista desde el archivo JSON.";
   }
+
+  function filterList({query}){
+    const filteredList = list.filter(item => item.toLowerCase().includes(query.toLowerCase()));
+    renderList({items:filteredList});
+  }
+
+  renderList({items:list});
+
+  search.addEventListener('keyup', ()=>{
+    filterList({query: search.value});
+  })
+
 });
