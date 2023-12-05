@@ -1,7 +1,4 @@
 const List = [
-  ".DS_Store",
-  ".git",
-  ".gitattributes",
   "01-Introduccion",
   "02-Variables",
   "03-Strings",
@@ -55,18 +52,15 @@ const List = [
   "51-Testing-Jest",
   "52-Testing-Cypress",
   "53-Webpack-ESLint",
-  "assets",
-  "package.json",
-  "script.js",
 ];
 document.addEventListener("DOMContentLoaded", function () {
   const appDiv = document.getElementById("app");
 
   if (Array.isArray(List)) {
     const listLinks = List.map(
-      (element) => `<li><a href="/${element}">${element}</a></li>`
+      (element) => `<li><a class="text-blue-500" href="/${element}">${element}</a></li>`
     ).join("");
-    appDiv.innerHTML = `<ul>${listLinks}</ul>`;
+    appDiv.innerHTML = `<ul class='columns-3'>${listLinks}</ul>`;
   } else {
     appDiv.innerHTML = "Error al cargar la lista desde el archivo JSON.";
   }
