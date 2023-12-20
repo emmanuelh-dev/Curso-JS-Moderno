@@ -24,6 +24,21 @@ header {
 header h1 {
   color: white;
 }
+#citas {
+  overflow-y: scroll;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: transparent transparent; /* Firefox */
+  height: 600px;
+}
+
+#citas::-webkit-scrollbar {
+  width: 5px; /* Ajusta el ancho según sea necesario */
+}
+
+#citas::-webkit-scrollbar-thumb {
+  background-color: transparent; /* Color del fondo del pulgar */
+}
+
 .lista-citas .cita {
   border-bottom: 1px solid #e1e1e1;
   padding: 2rem;
